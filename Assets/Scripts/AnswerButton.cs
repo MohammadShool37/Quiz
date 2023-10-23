@@ -18,23 +18,23 @@ public class AnswerButton : MonoBehaviour
         buttonImage = GetComponent<Image>();
     }
 
-    public void TrueEffect(Action<bool> onEnd)
+    public void TrueEffect(Action onEnd)
     {
         FadeEffect(() =>
         {
             buttonImage.color = Color.green;
             answerText.color = Color.green;
-            onEnd(true);
+            onEnd();
         });
     }
 
-    public void NotTrueEffect(Action<bool> onEnd)
+    public void NotTrueEffect(Action onEnd)
     {
         FadeEffect(() =>
         {
             buttonImage.color = Color.red;
             answerText.color = Color.red;
-            onEnd(false);
+            onEnd();
         });
     }
 

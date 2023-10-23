@@ -17,6 +17,7 @@ public class Connection : MonoBehaviour
             }
 
             insc = value;
+            DontDestroyOnLoad(instance);
         }
     }
 
@@ -30,6 +31,7 @@ public class Connection : MonoBehaviour
     public Socket socket;
 
     public UnityEvent onConnection;
+    public UnityEvent onDisconnect;
 
     void Start()
     {
@@ -37,5 +39,6 @@ public class Connection : MonoBehaviour
         socket = socketManager.Socket;
 
         socket.On("connect", () => onConnection?.Invoke());
+        socket.On("disconnect", ()=>onDisconnect?.Invoke());
     }
 }

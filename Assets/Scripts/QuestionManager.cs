@@ -3,104 +3,107 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class QuestionManager : MonoBehaviour
+namespace Quiz
 {
-    public List<Question> questions;
-    private int currentQuestionLength;
-
-    [System.Serializable]
-    public struct Question
+    public class QuestionManager : MonoBehaviour
     {
-        public string question;
-        public string[] answers;
-        public int answerIndex;
-    }
 
-    [SerializeField, Space(5), Header("UI :")]
-    private TextMeshProUGUI questionText;
+        #region Get UI Components
 
-    [SerializeField]
-    private AnswerButton[] answerButtons;
+        [SerializeField]
+        private UIComponentData uiComponents;
 
-    [SerializeField, Tooltip("text who want to show current answer count and all question count")]
-    private TextMeshProUGUI answerLengthInforamtionText;
-
-    public void ShowQuestionInformation()
-    {
-        Question currentQuestion = questions[currentQuestionLength];
-        questionText.text = currentQuestion.question;
-
-        for (int i = 0; i < answerButtons.Length; i++)
+        [System.Serializable]
+        public class UIComponentData
         {
-            answerButtons[i].answerText.text = currentQuestion.answers[i];
-        }
-        
-        answerLengthInforamtionText.text = (currentQuestionLength + 1) + "/" + (questions.Count);
-    }
-
-    private void NextQuestion()
-    {
-        currentQuestionLength++;
-
-        if (currentQuestionLength >= questions.Count)
-        {
-            Debug.Log("questions end know is time to win");
-            return;
+            public TextMeshProUGUI questionText;
+            public AnswerButton[] answerButtons;
+            public TextMeshProUGUI numberOfQuestionsText;
         }
 
-        isAnswerInProcess = false;
-        ResetAnswerButtons();
-        ShowQuestionInformation();
-    }
+        #endregion
 
-    private void ResetAnswerButtons()
-    {
-        for (int i = 0; i < answerButtons.Length; i++)
+        public QuestionStructure[] questions;
+        int currentQuestion = 0;
+
+        void NextQuestion()
         {
-            answerButtons[i].ResetAnswerButton();
-        }
-    }
+            currentQuestion++;
 
-    private void Start()
-    {
-        for (int i = 0; i < answerButtons.Length; i++)
-        {
-            int temp = i;
-            answerButtons[i].answerButton.onClick.AddListener(() => Answer(temp));
-        }
+            if (currentQuestion >= questions.Length)
+            {
+                Debug.Log("Time To Win");
+                return;
+            }
+            
+            isAnswerInProcess = false;
 
-        ShowQuestionInformation();
-    }
-
-    bool isAnswerInProcess = false;
-
-    public void Answer(int ansIndex = 0)
-    {
-        if (isAnswerInProcess) return;
-
-        if (questions[currentQuestionLength].answerIndex == ansIndex)
-            answerButtons[ansIndex].TrueEffect(OnEndAnswering);
-        else
-            answerButtons[ansIndex].NotTrueEffect(OnEndAnswering);
-
-        isAnswerInProcess = true;
-    }
-
-    void OnEndAnswering(bool isTrue)
-    {
-        if (!isTrue)
-        {
-            Debug.Log("time to fail");
-            return;
+            ResetAnswerButtons();
+            ShowCurrentQuestion();
         }
 
-        StartCoroutine("DelayBeforeNextQuestion");
-    }
+        public void ShowCurrentQuestion()
+        {
+            uiComponents.questionText.text = questions[currentQuestion].question;
 
-    IEnumerator DelayBeforeNextQuestion()
-    {
-        yield return new WaitForSeconds(3f);
-        NextQuestion();
+            for (int i = 0; i < questions[currentQuestion].answers.Length; i++)
+            {
+                uiComponents.answerButtons[i].answerText.text = questions[currentQuestion].answers[i];
+            }
+
+            uiComponents.numberOfQuestionsText.text = currentQuestion + "/" + questions.Length;
+        }
+
+        public void ResetAnswerButtons()
+        {
+            foreach (AnswerButton ansBtn in uiComponents.answerButtons)
+            {
+                ansBtn.ResetAnswerButton();
+            }
+        }
+
+        bool isAnswerInProcess = false;
+        public void Answer(int ans)
+        {
+            if (isAnswerInProcess) return;
+            bool isWin = questions[currentQuestion].real_answer == questions[currentQuestion].answers[ans];
+
+            void EffectEnd()
+            {
+                if (!isWin)
+                {
+                    Debug.Log("Time To Fail.");
+                    return;
+                }
+
+                StartCoroutine(enumerator());
+
+                IEnumerator enumerator()
+                {
+                    yield return new WaitForSeconds(3f);
+                    NextQuestion();
+                }
+            }
+
+            if (isWin)
+                uiComponents.answerButtons[ans].TrueEffect(EffectEnd);
+            else
+                uiComponents.answerButtons[ans].NotTrueEffect(EffectEnd);
+
+            isAnswerInProcess = true;
+        }
+
+        private void Start()
+        {
+            // add listener to ui answer buttons
+            for (int i = 0; i < uiComponents.answerButtons.Length; i++)
+            {
+                int temp = i;
+
+                uiComponents.answerButtons[i].answerButton.onClick.AddListener(() => Answer(temp));
+            }
+        }
+
     }
 
 }

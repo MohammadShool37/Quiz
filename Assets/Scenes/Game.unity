@@ -989,7 +989,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &585975434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1004,6 +1004,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   socketAddress: http://127.0.0.1:3000
   onConnection:
+    m_PersistentCalls:
+      m_Calls: []
+  onDisconnect:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &585975435
@@ -1403,7 +1406,7 @@ GameObject:
   - component: {fileID: 909115670}
   - component: {fileID: 909115669}
   m_Layer: 5
-  m_Name: QuestionLengthInformation
+  m_Name: numberOfQuestionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1425,8 +1428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -254.8, y: 442}
-  m_SizeDelta: {x: 243.84, y: 132.06}
+  m_AnchoredPosition: {x: -287.62, y: 442}
+  m_SizeDelta: {x: 178.19, y: 132.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &909115669
 MonoBehaviour:
@@ -1535,6 +1538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1048001887}
   - component: {fileID: 1048001886}
+  - component: {fileID: 1048001888}
   m_Layer: 0
   m_Name: QuestionManager
   m_TagString: Untagged
@@ -1554,28 +1558,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ab2efa9806a6594c83693def7ad9a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questions:
-  - question: What is Benz?
-    answers:
-    - Car
-    - Brand
-    - I Dont Know
-    - Just Click
-    answerIndex: 1
-  - question: What is Unity?
-    answers:
-    - Game Engine
-    - Render Engine
-    - Application Maker
-    - Game Framework
-    answerIndex: 0
-  questionText: {fileID: 1889484692}
-  answerButtons:
-  - {fileID: 1391911840}
-  - {fileID: 637145133}
-  - {fileID: 1370264332}
-  - {fileID: 323173488}
-  answerLengthInforamtionText: {fileID: 909115669}
+  uiComponents:
+    questionText: {fileID: 1889484692}
+    answerButtons:
+    - {fileID: 1391911840}
+    - {fileID: 637145133}
+    - {fileID: 1370264332}
+    - {fileID: 323173488}
+    numberOfQuestionsText: {fileID: 909115669}
+  questions: []
 --- !u!4 &1048001887
 Transform:
   m_ObjectHideFlags: 0
@@ -1591,6 +1582,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1048001888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048001885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd402e236bc96334e96ec99c059a6a29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1080571926
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,7 +2413,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 5.56, y: 442}
-  m_SizeDelta: {x: 764.55, y: 132.06}
+  m_SizeDelta: {x: 531.61, y: 132.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1889484692
 MonoBehaviour:
@@ -2459,12 +2462,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 40
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
